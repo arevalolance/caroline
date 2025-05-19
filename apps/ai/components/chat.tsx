@@ -66,7 +66,7 @@ export default function Chat({
 			/>
 
 			<div className="flex flex-1 w-full md:max-w-3xl mx-auto">
-				<form className="bg-background fixed bottom-0 w-full items-stretch gap-2 rounded-t-xl border border-b-0 border-slate/30 px-3 py-3 text-secondary-foreground max-sm:pb-6 sm:max-w-3xl" onSubmit={handleSubmit}>
+				<form className="bg-background fixed bottom-2 w-full items-stretch gap-2 rounded-t-xl border border-b-0 border-slate/30 px-3 py-3 text-secondary-foreground max-sm:pb-6 sm:max-w-3xl" onSubmit={handleSubmit}>
 					<Textarea
 						className="resize-none h-18 border-none shadow-none active:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
 						value={input}
