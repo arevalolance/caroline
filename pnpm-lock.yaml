@@ -38,6 +38,9 @@ importers:
       '@better-auth-kit/convex':
         specifier: ^1.2.2
         version: 1.2.2(better-auth@1.2.8)(convex@1.24.1(react@19.0.0))(typescript@5.7.3)
+      '@vercel/functions':
+        specifier: ^2.1.0
+        version: 2.1.0
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -1725,6 +1728,15 @@ packages:
     resolution: {integrity: sha512-friS8NEQfHaDbkThxopGk+LuE5v3iY0StruifjQEt7SLbA46OnfgMO15sOTkbpJkol6RB+1l1TYPXh0sCddpvA==}
     cpu: [x64]
     os: [win32]
+
+  '@vercel/functions@2.1.0':
+    resolution: {integrity: sha512-1gSbK9zfrbJxk1JTBVERDhLi01mK3fz+gw4GjOjZwHnqs0zsBhQA70HGVtXQX/Z3BTRMfbpAEMVDfhecRw0lDA==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@aws-sdk/credential-provider-web-identity': '*'
+    peerDependenciesMeta:
+      '@aws-sdk/credential-provider-web-identity':
+        optional: true
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -5367,6 +5379,8 @@ snapshots:
 
   '@unrs/resolver-binding-win32-x64-msvc@1.7.2':
     optional: true
+
+  '@vercel/functions@2.1.0': {}
 
   acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:

@@ -28,7 +28,7 @@ export const getMessagesByChatId = query({
 	handler: async (ctx, args) => {
 		const messages = await ctx.db
 			.query("messages")
-			.withIndex("by_chatId_creationTime", (q) => q.eq("chatId", args.chatId))
+			.withIndex("by_chatId", (q) => q.eq("chatId", args.chatId))
 			.collect();	
 
 		return messages;
@@ -58,12 +58,33 @@ export const deleteTrailingMessages = mutation({
 
 		const messagesToDelete = await ctx.db
 			.query("messages")
-			.withIndex("by_chatId_creationTime", (q) => q.eq("chatId", message.chatId))
+			.withIndex("by_chatId", (q) => q.eq("chatId", message.chatId))
 			.filter((q) => q.gt(q.field("_creationTime"), message._creationTime))
 			.collect();
 
 		for (const message of messagesToDelete) {
 			await ctx.db.delete(message._id);
+		}
+	},
+})
+
+export const saveMessages = mutation({
+	args: {
+		messages: v.array(v.object({
+			chatId: v.id("chat"),
+			role: v.string(),
+			parts: v.any(),
+			attachments: v.any(),
+		}))
+	},
+	handler: async (ctx, args) => {
+		for (const message of args.messages) {
+			await ctx.db.insert("messages", {
+				chatId: message.chatId,
+				role: message.role,
+				parts: message.parts,
+				attachments: message.attachments,
+			});
 		}
 	},
 })

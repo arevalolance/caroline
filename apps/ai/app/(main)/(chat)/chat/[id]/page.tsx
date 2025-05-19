@@ -5,17 +5,23 @@ import Chat from '@/components/chat';
 import { Attachment, UIMessage } from 'ai';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { Session, User } from 'better-auth/types';
 
 export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
-	const { data: sessionHookData } = await getSession();
+	const sessionHookData = await auth.api.getSession({
+		headers: await headers()
+	}) as { session: Session, user: User };
 
 	if (!sessionHookData) {
-		return notFound();
+		return (<div>no auth</div>);
 	}
 
 	const { session, user } = sessionHookData;
 
+	console.log({ id })
 	const chat = await fetchQuery(api.chat.getChatByUuid, { chatId: id });
 
 	if (!chat) {

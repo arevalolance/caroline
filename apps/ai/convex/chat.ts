@@ -26,7 +26,7 @@ export const getChatByUuid = query({
 	handler: async (ctx, args) => {
 		const chat = await ctx.db
 			.query("chat")
-			.withIndex("by_uuid_creationTime", (q) => q.eq("chatId", args.chatId))
+			.withIndex("by_uuid", (q) => q.eq("chatId", args.chatId))
 			.unique();
 
 		return chat;

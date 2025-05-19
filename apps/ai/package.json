@@ -13,6 +13,7 @@
     "@ai-sdk/openai-compatible": "^0.2.14",
     "@ai-sdk/react": "^1.2.12",
     "@better-auth-kit/convex": "^1.2.2",
+    "@vercel/functions": "^2.1.0",
     "@workspace/ui": "workspace:*",
     "ai": "^4.3.15",
     "better-auth": "^1.2.8",
