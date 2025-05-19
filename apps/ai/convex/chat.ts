@@ -4,10 +4,12 @@ import { v } from "convex/values";
 export const createChat = mutation({
 	args: {
 		userId: v.id("user"),
+		chatId: v.string(),
 		title: v.string(),
 	},
 	handler: async (ctx, args) => {
 		const chat = await ctx.db.insert("chat", {
+			chatId: args.chatId,
 			userId: args.userId,
 			title: args.title,
 			visibility: "private",
@@ -17,15 +19,19 @@ export const createChat = mutation({
 	},
 })
 
-export const getChatById = query({
+export const getChatByUuid = query({
 	args: {
-		id: v.id("chat"),
+		chatId: v.string(), // Expect the frontend-generated UUID
 	},
 	handler: async (ctx, args) => {
-		const chat = await ctx.db.get(args.id);
+		const chat = await ctx.db
+			.query("chat")
+			.withIndex("by_uuid_creationTime", (q) => q.eq("chatId", args.chatId))
+			.unique();
+
 		return chat;
 	},
-})
+});
 
 export const updateChatVisibility = mutation({
 	args: {

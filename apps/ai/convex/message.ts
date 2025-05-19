@@ -26,7 +26,11 @@ export const getMessagesByChatId = query({
 		chatId: v.id("chat"),
 	},
 	handler: async (ctx, args) => {
-		const messages = await ctx.db.query("messages").withIndex("by_chatId_createdAt", (q) => q.eq("chatId", args.chatId)).collect();
+		const messages = await ctx.db
+			.query("messages")
+			.withIndex("by_chatId_creationTime", (q) => q.eq("chatId", args.chatId))
+			.collect();	
+
 		return messages;
 	},
 })
@@ -54,7 +58,7 @@ export const deleteTrailingMessages = mutation({
 
 		const messagesToDelete = await ctx.db
 			.query("messages")
-			.withIndex("by_chatId_createdAt", (q) => q.eq("chatId", message.chatId))
+			.withIndex("by_chatId_creationTime", (q) => q.eq("chatId", message.chatId))
 			.filter((q) => q.gt(q.field("_creationTime"), message._creationTime))
 			.collect();
 

@@ -26,14 +26,15 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@workspace/ui/components/sidebar"
+import { useSession } from "@/lib/auth-client"
 
 // This is sample data.
 const data = {
-	user: {
-		name: "shadcn",
-		email: "m@example.com",
-		avatar: "/avatars/shadcn.jpg",
-	},
+	// user: {
+	// 	name: "shadcn",
+	// 	email: "m@example.com",
+	// 	avatar: "/avatars/shadcn.jpg",
+	// },
 	teams: [
 		{
 			name: "Acme Inc",
@@ -152,6 +153,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
@@ -162,7 +164,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<NavProjects projects={data.projects} />
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser user={data.user} />
+				<NavUser />
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

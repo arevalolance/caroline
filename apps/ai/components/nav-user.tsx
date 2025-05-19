@@ -29,17 +29,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { useSession } from "@/lib/auth-client"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar()
+
+	const { data: authData } = useSession();
+	const user = {
+		name: authData?.user?.name ?? "",
+		email: authData?.user?.email ?? "",
+		avatar: authData?.user?.image ?? "",
+	}
 
   return (
     <SidebarMenu>

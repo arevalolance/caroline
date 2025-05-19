@@ -1,39 +1,24 @@
-"use client";
-
-import { useChat } from '@ai-sdk/react';
-import { notFound, useParams, useRouter } from 'next/navigation';
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { notFound, redirect } from 'next/navigation';
 import { Doc, Id } from '@/convex/_generated/dataModel';
-import { useSession } from '@/lib/auth-client';
+import { getSession } from '@/lib/auth-client';
 import Chat from '@/components/chat';
 import { Attachment, UIMessage } from 'ai';
+import { fetchQuery } from 'convex/nextjs';
+import { api } from '@/convex/_generated/api';
 
-export default function ChatPage() {
-	const { id } = useParams<{ id: string }>();
-	const sessionHookData = useSession();
-	const router = useRouter();
+export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
+	const { data: sessionHookData } = await getSession();
 
-	// Handle session loading state
-	if (sessionHookData.isPending) {
-		return <div>Loading...</div>;
-	}
-
-	// If no session data, redirect to sign in
-	if (!sessionHookData.data) {
-		router.push('/auth/sign-in');
-		return null;
-	}
-
-	const { user, session } = sessionHookData.data;
-
-	const chat = useQuery(api.chat.getChatById, { id: id as Id<"chat"> });
-
-	if (!chat) {
+	if (!sessionHookData) {
 		return notFound();
 	}
 
-	if (!session) {
+	const { session, user } = sessionHookData;
+
+	const chat = await fetchQuery(api.chat.getChatByUuid, { chatId: id });
+
+	if (!chat) {
 		return notFound();
 	}
 
@@ -43,7 +28,8 @@ export default function ChatPage() {
 		}
 	}
 
-	const messagesFromDb = useQuery(api.message.getMessagesByChatId, { chatId: id as Id<"chat"> });
+	const messagesFromDb = await fetchQuery(api.message.getMessagesByChatId, { chatId: chat?._id as Id<"chat"> });
+
 
 	function convertToUIMessages(messages: Array<Doc<"messages">>): Array<UIMessage> {
 		return messages.map((message) => ({
