@@ -27,6 +27,10 @@ import {
 	SidebarRail,
 } from "@workspace/ui/components/sidebar"
 import { useSession } from "@/lib/auth-client"
+import { fetcher } from "@/lib/utils"
+import { getChatHistoryPaginationKey } from "./sidebar-history"
+import { ChatHistory } from "./sidebar-history"
+import useSWRInfinite from "swr/infinite"
 
 // This is sample data.
 const data = {
@@ -153,6 +157,15 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const {
+		data: paginatedChatHistories,
+		setSize,
+		isValidating,
+		isLoading,
+		mutate,
+	} = useSWRInfinite<ChatHistory>(getChatHistoryPaginationKey, fetcher, {
+		fallbackData: [],
+	});
 
 	return (
 		<Sidebar variant="inset" collapsible="icon" {...props}>

@@ -1,4 +1,7 @@
+"use client";
+
 import { AppSidebar } from "@/components/app-sidebar"
+import { SidebarRight } from "@/components/sidebar-right"
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -13,12 +16,16 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@workspace/ui/components/sidebar"
+import { usePathname } from "next/navigation"
 
 export default function Layout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const pathname = usePathname()
+    const showSidebarRight = pathname.startsWith("/chat")
+
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -49,6 +56,7 @@ export default function Layout({
                     {children}
                 </div>
             </SidebarInset>
+            {showSidebarRight && <SidebarRight />}
         </SidebarProvider>
     )
 }

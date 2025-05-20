@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { memo } from 'react';
 import { useChatVisibility } from '@/hooks/use-chat-visibility';
-import { DataModel } from '@/convex/_generated/dataModel';
+import { Doc } from '@/convex/_generated/dataModel';
 
 const PureChatItem = ({
     chat,
@@ -32,21 +32,21 @@ const PureChatItem = ({
     onDelete,
     setOpenMobile,
 }: {
-    chat: DataModel["chat"];
+    chat: Doc<"chat">;
     isActive: boolean;
     onDelete: (chatId: string) => void;
     setOpenMobile: (open: boolean) => void;
 }) => {
     const { visibilityType, setVisibilityType } = useChatVisibility({
-        chatId: chat.document._id,
-        initialVisibilityType: chat.document.visibility,
+        chatId: chat._id,
+        initialVisibilityType: chat.visibility,
     });
 
     return (
         <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={isActive}>
-                <Link href={`/chat/${chat.document._id}`} onClick={() => setOpenMobile(false)}>
-                    <span>{chat.document.title}</span>
+                <Link href={`/chat/${chat.chatId}`} onClick={() => setOpenMobile(false)}>
+                    <span>{chat.title}</span>
                 </Link>
             </SidebarMenuButton>
 
@@ -101,7 +101,7 @@ const PureChatItem = ({
 
                     <DropdownMenuItem
                         className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
-                        onSelect={() => onDelete(chat.document._id)}
+                        onSelect={() => onDelete(chat._id)}
                     >
                         <TrashIcon />
                         <span>Delete</span>

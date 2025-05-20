@@ -1,7 +1,7 @@
 "use client";
 
 import { generateUUID } from '@/lib/utils';
-import { useChat, UseChatHelpers } from '@ai-sdk/react';
+import { useChat } from '@ai-sdk/react';
 import { UIMessage } from 'ai';
 import { Session } from 'better-auth/types';
 import { toast } from 'sonner';
@@ -9,9 +9,11 @@ import { Messages } from './messages';
 import { Textarea } from '@workspace/ui/components/textarea';
 import { ArrowUp } from 'lucide-react';
 import { Button } from '@workspace/ui/components/button';
-import { SuggestedActions } from './suggested-actions';
 import { useChatVisibility } from '@/hooks/use-chat-visibility';
 import { VisibilityType } from './visibility-selector';
+import { useSWRConfig } from 'swr';
+import { unstable_serialize } from 'swr/infinite';
+import { getChatHistoryPaginationKey } from './sidebar-history';
 
 export default function Chat({
 	id,
@@ -30,6 +32,8 @@ export default function Chat({
 	session: Session;
 	autoResume: boolean;
 }) {
+	const { mutate } = useSWRConfig();
+
 	const { visibilityType } = useChatVisibility({
 		chatId: id,
 		initialVisibilityType,
@@ -40,6 +44,9 @@ export default function Chat({
 		initialMessages,
 		experimental_throttle: 100,
 		sendExtraMessageFields: true,
+		onFinish: () => {
+			mutate(unstable_serialize(getChatHistoryPaginationKey));
+		  },
 		generateId: generateUUID,
 		experimental_prepareRequestBody: (body) => ({
 			id,

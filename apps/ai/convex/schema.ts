@@ -34,5 +34,5 @@ export default defineSchema({
         parts: v.any(),
         attachments: v.any(),
     })
-        .index("by_chatId", ["chatId"]), // Crucial for fetching messages for a chat, sorted
+        .index("by_chatId", ["chatId"]),
 });

@@ -9,21 +9,26 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const sessionCookie = getSessionCookie(request);
 
+    const headers = new Headers(request.headers);
+    headers.set("x-current-path", request.nextUrl.pathname);
+
     if (sessionCookie && AUTH_PAGES.includes(pathname)) {
         return NextResponse.redirect(
             new URL(REDIRECT_AUTHENTICATED_USER_TO, request.url),
         );
     }
 
-    const isAccessingProtectedContent = 
-        pathname.startsWith("/dashboard") || 
+    const isAccessingProtectedContent =
+        pathname.startsWith("/dashboard") ||
         pathname.startsWith("/chat");
-        
+
     if (!sessionCookie && isAccessingProtectedContent) {
         return NextResponse.redirect(new URL("/auth/sign-in", request.url));
     }
 
-    return NextResponse.next();
+    return NextResponse.next({
+        headers,
+    });
 }
 
 export const config = {
